@@ -51,13 +51,40 @@ footer {
   padding: 20px;
 }
 
-/* Add the previous navbar styles plus the following */
+/* Navbar styles */
+.navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  display: flex;
+}
+
+.navbar li {
+  margin-right: 20px;
+}
+
+.navbar li:last-child {
+  margin-right: 0;
+}
+
+.navbar li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  transition: background-color 0.3s;
+}
+
+.navbar li a:hover {
+  background-color: #555;
+}
 
 /* Navbar toggle styles */
 .navbar-toggle {
-  display: none; /* Initially hidden on larger screens */
+  display: none;
   cursor: pointer;
-  padding: 10px;
 }
 
 .bar {
@@ -70,19 +97,26 @@ footer {
 
 /* Media query for smaller screens */
 @media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+  }
+  
   .navbar li {
-    display: none; /* Hide navbar items on smaller screens */
+    margin-right: 0;
+    margin-bottom: 10px;
   }
   
   .navbar-toggle {
-    display: block; /* Display the toggle button on smaller screens */
+    display: block;
+    margin-left: auto;
+    padding: 10px;
   }
   
   .navbar.toggled {
-    display: block; /* Show navbar in vertical mode */
+    display: block;
   }
   
   .navbar.toggled li {
-    display: block; /* Display navbar items vertically */
+    display: block;
   }
 }
