@@ -10,9 +10,6 @@
   <header>
     <h1>Vagabond Scans</h1>
     <nav>
-      <div class="navbar-toggle" onclick="toggleNavbar()">
-        <div class="bar"></div>
-      </div>
       <ul class="navbar" id="navbar">
         <li><a href="#" class="nav-link">Home</a></li>
         <li><a href="#" class="nav-link">Manga</a></li>
@@ -20,12 +17,18 @@
         <li><a href="#" class="nav-link">Contact</a></li>
       </ul>
     </nav>
+    <div class="search">
+      <div id="search">
+        <input type="text" placeholder="Search" name="search" id="search">
+      </div>
+      <img id="icon" src="search.svg" onclick="toggle()" alt="search">
+    </div>
   </header>
   
   <main>
     <section class="latest-release">
       <h2>Latest Release</h2>
-      <div class="manga-preview">
+      <div class="manga-preview box">
         <img src="manga_cover.jpg" alt="Manga Cover">
         <p>Title: Chapter X</p>
         <p>Release Date: Month Day, Year</p>
@@ -34,9 +37,38 @@
     
     <section class="popular-manga">
       <h2>Popular Manga</h2>
-      <!-- Add popular manga here -->
+      <div class="manga-list">
+        <div class="manga-item box">
+          <img src="manga_cover_1.jpg" alt="Manga Cover">
+          <p>Title: Manga 1</p>
+          <p>Description: Lorem ipsum dolor sit amet...</p>
+        </div>
+        <div class="manga-item box">
+          <img src="manga_cover_2.jpg" alt="Manga Cover">
+          <p>Title: Manga 2</p>
+          <p>Description: Lorem ipsum dolor sit amet...</p>
+        </div>
+        <!-- Add more manga items here -->
+      </div>
     </section>
-  </main>
+    
+    <section class="featured-manga">
+      <h2>Featured Manga</h2>
+      <div class="manga-list">
+        <div class="manga-item box">
+          <img src="manga_cover_3.jpg" alt="Manga Cover">
+          <p>Title: Manga 3</p>
+          <p>Description: Lorem ipsum dolor sit amet...</p>
+        </div>
+        <div class="manga-item box">
+          <img src="manga_cover_4.jpg" alt="Manga Cover">
+          <p>Title: Manga 4</p>
+          <p>Description: Lorem ipsum dolor sit amet...</p>
+        </div>
+        <!-- Add more manga items here -->
+      </div>
+    </section>
+  </main>  
   
   <footer>
     <p>&copy; 2024 Vagabond Scans. All rights reserved.</p>

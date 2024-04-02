@@ -2,6 +2,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background: #16151d;
+  color: #fff;
 }
 
 header {
@@ -13,6 +15,61 @@ header {
   margin:0;
   padding:0;
   overflow:hidden;
+  display: flex;
+  justify-content: space-around;
+}
+
+header input{
+  min-height: 25px;
+  max-height: 40px;
+  min-width: 120px;
+  max-width: 180px;
+  border: #333 solid 2px;
+  background: #6e6e6e;
+  border-radius: 15pt;
+  padding-left: 10px;
+  color: #fff;
+  outline: none;
+}
+
+header input:focus{
+  border: #fff 2px solid;
+}
+
+header input:focus::placeholder {
+  color: #6e6e6e;
+}
+
+header input::placeholder{
+  color: #fff;
+}
+
+div.search img{
+  padding-left: 5px;
+  position: relative;
+}
+
+div.search{
+  display: flex;
+  align-items: center;
+}
+
+div.search div{
+  display:none;
+}
+
+div.search div.popup{
+  display:block;
+}
+
+div.search .popup{
+  display:flex;
+  align-items: center;
+}
+
+nav{
+  display: flex;
+  align-items: center;
 }
 
 nav ul {
@@ -38,11 +95,34 @@ main {
   margin-bottom: 30px;
 }
 
-.manga-preview {
-  border: 1px solid #ccc;
-  padding: 10px;
+.box {
+  border: black 1px solid;
+  border-radius: 2pt;
+  background-color: #222020;
+}
+
+.manga-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
   margin-top: 20px;
 }
+
+.manga-item {
+  width: 200px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.manga-item img {
+  max-width: 100%;
+  height: auto;
+}
+
+.manga-item p {
+  margin: 5px 0;
+}
+
 
 footer {
   background-color: #333;
@@ -81,20 +161,6 @@ footer {
   background-color: #555;
 }
 
-/* Navbar toggle styles */
-.navbar-toggle {
-  display: none;
-  cursor: pointer;
-}
-
-.bar {
-  width: 25px;
-  height: 3px;
-  background-color: #fff;
-  margin: 5px 0;
-  transition: 0.4s;
-}
-
 /* Media query for smaller screens */
 @media screen and (max-width: 768px) {
   .navbar {
@@ -104,19 +170,5 @@ footer {
   .navbar li {
     margin-right: 0;
     margin-bottom: 10px;
-  }
-  
-  .navbar-toggle {
-    display: block;
-    margin-left: auto;
-    padding: 10px;
-  }
-  
-  .navbar.toggled {
-    display: block;
-  }
-  
-  .navbar.toggled li {
-    display: block;
   }
 }
