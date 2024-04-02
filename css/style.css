@@ -50,3 +50,39 @@ footer {
   text-align: center;
   padding: 20px;
 }
+
+/* Add the previous navbar styles plus the following */
+
+/* Navbar toggle styles */
+.navbar-toggle {
+  display: none; /* Initially hidden on larger screens */
+  cursor: pointer;
+  padding: 10px;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  margin: 5px 0;
+  transition: 0.4s;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+  .navbar li {
+    display: none; /* Hide navbar items on smaller screens */
+  }
+  
+  .navbar-toggle {
+    display: block; /* Display the toggle button on smaller screens */
+  }
+  
+  .navbar.toggled {
+    display: block; /* Show navbar in vertical mode */
+  }
+  
+  .navbar.toggled li {
+    display: block; /* Display navbar items vertically */
+  }
+}
