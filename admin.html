@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal - Vagabond Scans</title>
+
+    <!-- Firebase CDN SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background: var(--bg-base); background-image: none;">
+
+    <nav class="navbar" style="position: static;">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">ADMIN <span class="highlight">PORTAL</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="btn-transparent" style="padding: 5px 15px; border-radius: 4px;">Back to Site</a>
+                <a href="#" id="logoutBtn" style="display:none; color: #ff3e72; font-weight: bold;">Logout <i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="admin-main">
+        
+        <!-- Login Form -->
+        <section id="loginSection" class="auth-panel">
+            <h2>Staff Authentication</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="staff@vagabondscans.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </button>
+            </form>
+        </section>
+
+        <!-- Admin Dashboard (Hidden until logged in) -->
+        <section id="dashboardSection" class="auth-panel" style="display: none;">
+            <h2><i class="fa-solid fa-cloud-arrow-up"></i> Upload Chapter</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">Connected to Firebase Database.</p>
+            
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Select Manga Series</label>
+                    <select id="mangaSelect" class="form-control" required>
+                        <option value="meguru">Meguru Mirai</option>
+                        <option value="vagabond">Vagabond (Remastered)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Chapter Number</label>
+                    <input type="number" id="chapterNum" class="form-control" placeholder="e.g. 24" step="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Chapter Pages (.jpg / .png)</label>
+                    <div class="dropzone" id="dropzone">
+                        <i class="fa-regular fa-images" style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 10px;"></i>
+                        <h3 style="color: var(--text-primary); font-size: 1.1rem;">Drag & Drop Files Here</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">or click to browse</p>
+                        <input type="file" id="fileInput" class="hidden-input" multiple accept="image/*">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="uploadBtn" style="width: 100%;">
+                    <i class="fa-solid fa-upload"></i> Publish to Database
+                </button>
+            </form>
+
+            <div id="uploadStatus" style="margin-top: 20px; font-weight: bold; color: var(--purple-light); display:none; text-align: center;"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
