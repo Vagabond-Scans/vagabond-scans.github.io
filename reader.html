@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chapter Reader - Vagabond Scans</title>
 
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,11 +27,11 @@
         </div>
         <h1 class="reader-title" id="readerTitle">Loading Chapter...</h1>
         <div class="reader-controls">
-            <button class="btn-transparent" id="prevChapBtn" style="padding: 6px 12px; border-radius: 4px;"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-            <select class="reader-select" id="chapterSelect" style="border-radius: 4px;">
-                <option>Chapter Selector</option>
+            <button class="btn-transparent" id="prevChapBtn" style="padding: 6px 12px; border-radius: 4px; display:none;"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+            <select class="reader-select form-control form-select" id="chapterSelect" style="padding: 5px 30px 5px 10px;">
+                <option>Select Chapter</option>
             </select>
-            <button class="btn-transparent" id="nextChapBtn" style="padding: 6px 12px; border-radius: 4px;">Next <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="btn-transparent" id="nextChapBtn" style="padding: 6px 12px; border-radius: 4px; display:none;">Next <i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </div>
 
@@ -42,42 +46,11 @@
     <!-- Bottom Navigation -->
     <div class="reader-header" style="position: static; border-bottom: none; border-top: 1px solid var(--border-color); justify-content: center; padding: 30px 4%;">
         <div style="display: flex; gap: 15px;">
-            <button class="btn" id="bottomPrev" onclick="document.getElementById('prevChapBtn').click()">Previous Chapter</button>
-            <button class="btn" id="bottomNext" onclick="document.getElementById('nextChapBtn').click()">Next Chapter</button>
+            <button class="btn" id="bottomPrev" style="display:none;" onclick="document.getElementById('prevChapBtn').click()">Previous Chapter</button>
+            <button class="btn" id="bottomNext" style="display:none;" onclick="document.getElementById('nextChapBtn').click()">Next Chapter</button>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const mangaId = urlParams.get('manga');
-            const chapter = urlParams.get('chap');
-
-            const readerTitle = document.getElementById('readerTitle');
-            const readerPages = document.getElementById('readerPages');
-            
-            if(!mangaId || !chapter) {
-                readerTitle.textContent = "Error: Invalid Link";
-                readerPages.innerHTML = "<h2 style='color: var(--text-muted); text-align: center; padding: 40px;'>No manga or chapter specified.</h2>";
-                return;
-            }
-
-            readerTitle.textContent = (mangaId.charAt(0).toUpperCase() + mangaId.slice(1)) + " - Chapter " + chapter;
-            loadSamplePages();
-
-            function loadSamplePages() {
-                readerPages.innerHTML = ''; // clear loading spinner
-                
-                // Testing samples to view reader functionality
-                for(let i=1; i<=10; i++) {
-                    const img = document.createElement('img');
-                    img.src = `https://placehold.co/800x1200/151520/ab6afb/png?text=Page+${i}\n${mangaId}+Ch.${chapter}`;
-                    img.alt = `Page ${i}`;
-                    img.loading = "lazy"; // Important for long chapters!
-                    readerPages.appendChild(img);
-                }
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

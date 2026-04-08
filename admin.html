@@ -9,6 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-storage-compat.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,6 +38,7 @@
         <!-- Login Form -->
         <section id="loginSection" class="auth-panel">
             <h2>Staff Authentication</h2>
+            <div id="loginError" style="color: #ff3e72; margin-bottom: 20px; font-weight: bold; display: none; text-align: center;"></div>
             <form id="loginForm">
                 <div class="form-group">
                     <label>Admin Email</label>
@@ -53,40 +55,73 @@
         </section>
 
         <!-- Admin Dashboard (Hidden until logged in) -->
-        <section id="dashboardSection" class="auth-panel" style="display: none;">
-            <h2><i class="fa-solid fa-cloud-arrow-up"></i> Upload Chapter</h2>
-            <p style="color: var(--text-muted); margin-bottom: 25px; text-align: center;">Connected to Firebase Database.</p>
-            
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label>Select Manga Series</label>
-                    <select id="mangaSelect" class="form-control" required>
-                        <option value="meguru">Meguru Mirai</option>
-                        <option value="vagabond">Vagabond (Remastered)</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Chapter Number</label>
-                    <input type="number" id="chapterNum" class="form-control" placeholder="e.g. 24" step="0.1" required>
-                </div>
+        <section id="dashboardSection" class="auth-panel" style="display: none; padding: 25px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                <button id="tabSeriesBtn" class="btn" style="flex: 1;">New Series</button>
+                <button id="tabChapterBtn" class="btn-transparent btn" style="flex: 1;">Upload Chapter</button>
+            </div>
 
-                <div class="form-group">
-                    <label>Upload Chapter Pages (.jpg / .png)</label>
-                    <div class="dropzone" id="dropzone">
-                        <i class="fa-regular fa-images" style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                        <h3 style="color: var(--text-primary); font-size: 1.1rem;">Drag & Drop Files Here</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem;">or click to browse</p>
-                        <input type="file" id="fileInput" class="hidden-input" multiple accept="image/*">
+            <!-- TAB 1: ADD SERIES -->
+            <div id="tabSeries">
+                <h2 style="font-size: 1.3rem;"><i class="fa-solid fa-book"></i> Register Manga Series</h2>
+                <form id="seriesForm">
+                    <div class="form-group">
+                        <label>Series Title</label>
+                        <input type="text" id="seriesTitle" class="form-control" placeholder="e.g. Blade of the Ronin" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>Thumbnail Cover URL</label>
+                        <input type="url" id="seriesCoverUrl" class="form-control" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author</label>
+                        <input type="text" id="seriesAuthor" class="form-control" placeholder="Author Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Synopsis (Optional)</label>
+                        <textarea id="seriesSynopsis" class="form-control" rows="3" placeholder="Brief description..."></textarea>
+                    </div>
+                    <button type="submit" class="btn" id="seriesBtn" style="width: 100%;">
+                        <i class="fa-solid fa-plus"></i> Create Series
+                    </button>
+                    <div id="seriesStatus" style="margin-top: 15px; color: var(--purple-light); text-align: center; display: none;"></div>
+                </form>
+            </div>
 
-                <button type="submit" class="btn" id="uploadBtn" style="width: 100%;">
-                    <i class="fa-solid fa-upload"></i> Publish to Database
-                </button>
-            </form>
+            <!-- TAB 2: UPLOAD CHAPTER -->
+            <div id="tabChapter" style="display: none;">
+                <h2 style="font-size: 1.3rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Chapter Pages</h2>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label>Select Series</label>
+                        <select id="mangaSelect" class="form-control form-select" required>
+                            <option value="">Loading Series...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Chapter Number</label>
+                        <input type="number" id="chapterNum" class="form-control" placeholder="e.g. 24" step="0.1" required>
+                    </div>
 
-            <div id="uploadStatus" style="margin-top: 20px; font-weight: bold; color: var(--purple-light); display:none; text-align: center;"></div>
+                    <div class="form-group">
+                        <label>Upload High-Res Pages (.jpg / .png)</label>
+                        <!-- Real Storage Dropzone -->
+                        <div class="dropzone" id="dropzone">
+                            <i class="fa-regular fa-images" style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 10px;"></i>
+                            <h3 style="color: var(--text-primary); font-size: 1.1rem;">Drag & Drop Image Files Here</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">or click to browse</p>
+                            <input type="file" id="fileInput" class="hidden-input" multiple accept="image/*" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" id="uploadBtn" style="width: 100%;">
+                        <i class="fa-solid fa-upload"></i> Upload & Publish
+                    </button>
+                    <div id="uploadStatus" style="margin-top: 20px; font-weight: bold; color: var(--purple-light); display:none; text-align: center;"></div>
+                </form>
+            </div>
+
         </section>
 
     </main>
