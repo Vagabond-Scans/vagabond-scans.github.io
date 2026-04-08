@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagabond Scans</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">VAGABOND <span class="highlight">SCANS</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="#manga-directory">Titles</a>
+                <a href="https://discord.gg/JNSZGWUYUV" target="_blank" class="btn-discord">
+                    <i class="fa-brands fa-discord"></i> Join Discord
+                </a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div class="mobile-dropdown">
+            <a href="index.html">Home</a>
+            <a href="#manga-directory">Titles</a>
+            <a href="https://discord.gg/JNSZGWUYUV" target="_blank">Join Discord</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg">
+            <!-- Simulated background effect placeholder (can be swapped with image later) -->
+            <div class="particles"></div>
+        </div>
+        <div class="hero-content">
+            <div class="badge">PRESENTS</div>
+            <h1 class="hero-title">VAGABOND SCANS</h1>
+            <p class="hero-subtitle">High-quality manga translations straight to your screen.</p>
+            <div class="hero-actions">
+                <a href="#manga-directory" class="btn btn-primary">
+                    <span class="btn-inner">Read Latest</span>
+                </a>
+                <a href="https://discord.gg/JNSZGWUYUV" target="_blank" class="btn btn-secondary">
+                    <span class="btn-inner"><i class="fa-brands fa-discord"></i> Community</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Latest Updates Section -->
+    <section id="manga-directory" class="section container">
+        <div class="section-header">
+            <h2>Latest <span class="highlight">Releases</span></h2>
+            <div class="section-decor"></div>
+        </div>
+
+        <div class="manga-grid" id="manga-grid-container">
+            <!-- Dynamic Manga Cards will be injected here by Javascript -->
+            <p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px 0;">Loading fresh releases directly from the GitHub database...</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <span class="logo-text">VAGABOND <span class="highlight">SCANS</span></span>
+                <p>Bringing the best scans to the community. Developed by Adnanmohdk1.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-column">
+                    <h4>Navigation</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#manga-directory">Titles</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h4>Socials</h4>
+                    <div class="social-icons">
+                        <a href="https://discord.gg/JNSZGWUYUV" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Vagabond Scans. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

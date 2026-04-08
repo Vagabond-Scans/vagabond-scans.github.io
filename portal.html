@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal - Vagabond Scans</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+    <!-- Navbar (Simplified) -->
+    <nav class="navbar admin-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-text">VAGABOND <span class="highlight">PORTAL</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Back to Site</a>
+                <a href="#" class="active"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div class="mobile-dropdown">
+            <a href="index.html">Back to Site</a>
+            <a href="#">Logout</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-profile">
+                <div class="avatar"><i class="fa-solid fa-user-shield"></i></div>
+                <div class="prof-info">
+                    <h4>Staff Member</h4>
+                    <span class="status"><i class="fa-solid fa-circle"></i> Authenticated</span>
+                </div>
+            </div>
+            <ul class="admin-menu">
+                <li class="active"><a href="#" data-tab="upload"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Manga</a></li>
+                <li><a href="#" data-tab="manage"><i class="fa-solid fa-list-check"></i> Manage Titles</a></li>
+                <li><a href="#" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Upload Tab -->
+            <section id="upload-tab" class="admin-panel active-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-cloud-arrow-up"></i> Upload New Chapter</h2>
+                    <p>Format required: ZIP, RAR, or multiple Image files for a single chapter.</p>
+                </div>
+                
+                <form id="uploadForm" class="upload-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="mangaSelect">Select Manga Series *</label>
+                            <select id="mangaSelect" class="form-control" required>
+                                <option value="" disabled selected>-- Choose Series --</option>
+                                <option value="meguru">Meguru Mirai</option>
+                                <option value="vagabond">Vagabond</option>
+                                <option value="new">+ Add New Series</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="chapterNum">Chapter Number *</label>
+                            <input type="number" id="chapterNum" class="form-control" placeholder="e.g. 24" step="0.1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="chapterTitle">Chapter Title (Optional)</label>
+                            <input type="text" id="chapterTitle" class="form-control" placeholder="e.g. The Turning Point">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="staffCredits">Staff Credits</label>
+                            <input type="text" id="staffCredits" class="form-control" placeholder="e.g. TL: Sky | TS: Pickpla | PR: Marval">
+                        </div>
+                        <div class="form-group full-width" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                            <label for="githubToken">GitHub Access Token (Required for Upload) *</label>
+                            <input type="password" id="githubToken" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxx" required>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">This token is never saved on a server. It is used securely via your browser to push files to the repository.</p>
+                        </div>
+                    </div>
+
+                    <!-- Drag and Drop Area -->
+                    <div class="form-group full-width">
+                        <label>Upload Pages *</label>
+                        <div class="dropzone" id="dropzone">
+                            <i class="fa-regular fa-images dropzone-icon"></i>
+                            <h3>Drag & Drop files here</h3>
+                            <p>or</p>
+                            <button type="button" class="btn btn-secondary mock-browse-btn" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                            <input type="file" id="fileInput" class="hidden-input" multiple accept="image/png, image/jpeg, image/webp, .zip">
+                        </div>
+                        <ul id="fileList" class="file-list">
+                            <!-- JS will populate mock files here -->
+                        </ul>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary submit-btn">
+                            <span class="btn-inner"><i class="fa-solid fa-upload"></i> Publish Chapter</span>
+                        </button>
+                        <p class="mock-warning"><i class="fa-solid fa-circle-info"></i> Note: This is an aesthetic UI mock. A backend is required for real uploads.</p>
+                    </div>
+                </form>
+
+                <!-- Mock Progress Bar -->
+                <div id="uploadProgress" class="upload-progress-container hidden">
+                    <h3>Uploading Chapter...</h3>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                    <span id="progressText">0%</span>
+                </div>
+            </section>
+
+            <!-- Other Tabs Placeholders -->
+            <section id="manage-tab" class="admin-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-list-check"></i> Manage Titles</h2>
+                    <p>Edit or delete existing chapters from the database.</p>
+                </div>
+                <div class="placeholder-content">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <h3>Under Construction</h3>
+                    <p>Management interface would be populated from the database here.</p>
+                </div>
+            </section>
+
+            <section id="settings-tab" class="admin-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-gear"></i> Settings</h2>
+                    <p>Modify team roles, theme overrides, and api keys.</p>
+                </div>
+                <div class="placeholder-content">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <h3>Under Construction</h3>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
