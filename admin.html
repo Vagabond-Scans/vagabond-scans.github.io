@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Staff Portal - Vagabond Scans</title>
 
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="assets/favicon_io/site.webmanifest">
-
     <!-- Firebase CDN SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
@@ -24,6 +18,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="assets/favicon_io/site.webmanifest">
 </head>
 <body style="background: var(--bg-base); background-image: none;">
 
@@ -60,49 +60,38 @@
             </form>
         </section>
 
-        <!-- Admin Dashboard (Hidden until logged in) -->
+        <!-- Admin Dashboard (Unified Mangadex Flow) -->
         <section id="dashboardSection" class="auth-panel" style="display: none; padding: 25px;">
-            <div style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
-                <button id="tabSeriesBtn" class="btn" style="flex: 1;">New Series</button>
-                <button id="tabChapterBtn" class="btn-transparent btn" style="flex: 1;">Upload Chapter</button>
-            </div>
-
-            <!-- TAB 1: ADD SERIES -->
-            <div id="tabSeries">
-                <h2 style="font-size: 1.3rem;"><i class="fa-solid fa-book"></i> Register Manga Series</h2>
-                <form id="seriesForm">
-                    <div class="form-group">
-                        <label>Series Title</label>
-                        <input type="text" id="seriesTitle" class="form-control" placeholder="e.g. Blade of the Ronin" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Thumbnail Cover URL</label>
-                        <input type="url" id="seriesCoverUrl" class="form-control" placeholder="https://..." required>
-                    </div>
-                    <div class="form-group">
-                        <label>Author</label>
-                        <input type="text" id="seriesAuthor" class="form-control" placeholder="Author Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Synopsis (Optional)</label>
-                        <textarea id="seriesSynopsis" class="form-control" rows="3" placeholder="Brief description..."></textarea>
-                    </div>
-                    <button type="submit" class="btn" id="seriesBtn" style="width: 100%;">
-                        <i class="fa-solid fa-plus"></i> Create Series
-                    </button>
-                    <div id="seriesStatus" style="margin-top: 15px; color: var(--purple-light); text-align: center; display: none;"></div>
-                </form>
-            </div>
-
-            <!-- TAB 2: UPLOAD CHAPTER -->
-            <div id="tabChapter" style="display: none;">
-                <h2 style="font-size: 1.3rem;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Chapter Pages</h2>
+            
+            <div id="tabChapter">
+                <h2 style="font-size: 1.3rem; margin-bottom: 25px; text-align: center;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload New Chapter</h2>
+                
                 <form id="uploadForm">
+                    
+                    <!-- Unified Series Selection -->
                     <div class="form-group">
                         <label>Select Series</label>
                         <select id="mangaSelect" class="form-control form-select" required>
                             <option value="">Loading Series...</option>
                         </select>
+                    </div>
+
+                    <!-- Dynamic "New Series" Fields -->
+                    <div id="newSeriesFields" style="display: none; background: rgba(138, 43, 226, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+                        <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--purple-light);"><i class="fa-solid fa-book"></i> Register Details For New Series</h3>
+                        <div class="form-group">
+                            <label>Series Title</label>
+                            <input type="text" id="seriesTitle" class="form-control" placeholder="e.g. Blade of the Ronin">
+                        </div>
+                        <div class="form-group">
+                            <label>Thumbnail Cover URL</label>
+                            <input type="url" id="seriesCoverUrl" class="form-control" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label>Author (Optional)</label>
+                            <input type="text" id="seriesAuthor" class="form-control" placeholder="Author Name">
+                        </div>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">This series will be permanently saved to the database upon chapter upload.</p>
                     </div>
                     
                     <div class="form-group">
@@ -112,7 +101,6 @@
 
                     <div class="form-group">
                         <label>Upload High-Res Pages (.jpg / .png)</label>
-                        <!-- Real Storage Dropzone -->
                         <div class="dropzone" id="dropzone">
                             <i class="fa-regular fa-images" style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 10px;"></i>
                             <h3 style="color: var(--text-primary); font-size: 1.1rem;">Drag & Drop Image Files Here</h3>

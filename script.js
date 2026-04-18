@@ -19,9 +19,9 @@ try {
     db = firebase.firestore();
     auth = firebase.auth();
     storage = firebase.storage();
-    console.log("Firebase App, Auth, Firestore, and Storage initialized successfully.");
+    console.log("Firebase App initialized successfully.");
 } catch (e) {
-    console.warn("Firebase initialization failed. Make sure your services are enabled.", e);
+    console.warn("Firebase initialization failed.", e);
 }
 
 // ==========================================
@@ -29,7 +29,6 @@ try {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- MOBILE MENU ---
     const mobileBtn = document.querySelector('.mobile-menu-btn');
     const mobileDropdown = document.querySelector('.mobile-dropdown');
 
@@ -48,22 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const mangaGridContainer = document.getElementById('manga-grid-container');
     
     if (mangaGridContainer && db) {
-        // Mangadex Logic: Fetch newest chapters, then visually link them to their Series Data
         db.collection("chapters").orderBy("uploadTime", "desc").limit(20).get()
         .then(async snapshot => {
             if (snapshot.empty) {
                 mangaGridContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No chapters found in database.</p>';
                 return;
             }
+            mangaGridContainer.innerHTML = ''; 
             
-            mangaGridContainer.innerHTML = ''; // clear loading
-            
-            // For each chapter, we must get its parent Series document to load the cover!
             for (let doc of snapshot.docs) {
                 const chapData = doc.data();
                 const chapId = doc.id;
                 
-                // Fetch the series info
                 const seriesDoc = await db.collection("series").doc(chapData.seriesId).get();
                 if(seriesDoc.exists) {
                     const seriesData = seriesDoc.data();
@@ -98,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // ADMIN.HTML - FIREBASE AUTH & STORAGE MANGADEX SYSTEM
+    // ADMIN.HTML - FIREBASE AUTH & UNIFIED UPLOAD
     // ==========================================
     const loginSection = document.getElementById('loginSection');
     const dashboardSection = document.getElementById('dashboardSection');
@@ -111,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginSection.style.display = 'none';
                 dashboardSection.style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'block';
-                loadSeriesIntoDropdown(); // Load manga dropdown when logged in
+                loadSeriesIntoDropdown();
             } else {
                 loginSection.style.display = 'block';
                 dashboardSection.style.display = 'none';
@@ -119,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Handle Login Submission
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             auth.signInWithEmailAndPassword(
@@ -131,78 +125,43 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Logout
         document.getElementById('logoutBtn').addEventListener('click', (e) => {
             e.preventDefault(); auth.signOut();
         });
 
-        // --- 2. ADMIN TABS UI ---
-        const tabSeriesBtn = document.getElementById('tabSeriesBtn');
-        const tabChapterBtn = document.getElementById('tabChapterBtn');
-        const tabSeries = document.getElementById('tabSeries');
-        const tabChapter = document.getElementById('tabChapter');
+        // --- 2. POPULATE SERIES DROPDOWN WITH "+ ADD NEW" ---
+        const mangaSelect = document.getElementById('mangaSelect');
+        const newSeriesFields = document.getElementById('newSeriesFields');
+        const seriesTitle = document.getElementById('seriesTitle');
+        const seriesCoverUrl = document.getElementById('seriesCoverUrl');
 
-        if(tabSeriesBtn && tabChapterBtn) {
-            tabSeriesBtn.addEventListener('click', () => {
-                tabSeries.style.display = 'block';
-                tabChapter.style.display = 'none';
-                tabSeriesBtn.classList.remove('btn-transparent');
-                tabChapterBtn.classList.add('btn-transparent');
-            });
-            tabChapterBtn.addEventListener('click', () => {
-                tabSeries.style.display = 'none';
-                tabChapter.style.display = 'block';
-                tabChapterBtn.classList.remove('btn-transparent');
-                tabSeriesBtn.classList.add('btn-transparent');
-            });
-        }
-
-        // --- 3. CREATE NEW SERIES ---
-        const seriesForm = document.getElementById('seriesForm');
-        if (seriesForm) {
-            seriesForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const btn = document.getElementById('seriesBtn');
-                const status = document.getElementById('seriesStatus');
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
-                
-                db.collection("series").add({
-                    title: document.getElementById('seriesTitle').value,
-                    coverUrl: document.getElementById('seriesCoverUrl').value,
-                    author: document.getElementById('seriesAuthor').value || "Unknown",
-                    synopsis: document.getElementById('seriesSynopsis').value || "",
-                    createdAt: Date.now()
-                }).then(() => {
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Series Added';
-                    status.innerText = "Series Created Successfully! You can now upload chapters to it.";
-                    status.style.display = 'block';
-                    seriesForm.reset();
-                    loadSeriesIntoDropdown(); // Refresh dropdown
-                    setTimeout(() => { 
-                        btn.innerHTML = '<i class="fa-solid fa-plus"></i> Create Series';
-                        status.style.display = 'none';
-                    }, 3000);
-                }).catch(err => {
-                    alert("Error: " + err.message);
-                    btn.innerHTML = '<i class="fa-solid fa-plus"></i> Create Series';
-                });
-            });
-        }
-
-        // --- 4. POPULATE SERIES DROPDOWN FOR UPLOADING ---
         function loadSeriesIntoDropdown() {
-            const select = document.getElementById('mangaSelect');
-            if(!select) return;
-            
+            if(!mangaSelect) return;
             db.collection("series").get().then(snapshot => {
-                select.innerHTML = '<option value="">-- Choose Series --</option>';
+                mangaSelect.innerHTML = '<option value="" disabled selected>-- Choose Series --</option>';
                 snapshot.forEach(doc => {
-                    select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
+                    mangaSelect.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
                 });
+                mangaSelect.innerHTML += `<option value="NEW_SERIES" style="font-weight:bold; color:var(--purple-main);">+ Add New Series</option>`;
             });
         }
 
-        // --- 5. DRAG & DROP FILE LOGIC ---
+        // Show/Hide New Series Fields based on dropdown selection
+        if(mangaSelect) {
+            mangaSelect.addEventListener('change', () => {
+                if(mangaSelect.value === 'NEW_SERIES') {
+                    newSeriesFields.style.display = 'block';
+                    seriesTitle.required = true;
+                    seriesCoverUrl.required = true;
+                } else {
+                    newSeriesFields.style.display = 'none';
+                    seriesTitle.required = false;
+                    seriesCoverUrl.required = false;
+                }
+            });
+        }
+
+        // --- 3. DRAG & DROP FILE LOGIC ---
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('fileInput');
         let selectedFiles = [];
@@ -216,19 +175,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault(); dropzone.classList.remove('dragover');
                 handleFiles(e.dataTransfer.files);
             });
-            fileInput.addEventListener('change', () => {
-                handleFiles(fileInput.files);
-            });
+            fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
             function handleFiles(files) {
-                selectedFiles = Array.from(files).sort((a,b) => a.name.localeCompare(b.name)); // Sort by filename (e.g. 01.jpg, 02.jpg)
+                selectedFiles = Array.from(files).sort((a,b) => a.name.localeCompare(b.name));
                 dropzone.innerHTML = `<i class="fa-solid fa-file-circle-check" style="font-size: 2rem; color: var(--purple-light); margin-bottom: 10px;"></i>
                                       <h3 style="color:white;">${selectedFiles.length} Pages Queued</h3>
                                       <p style="color:var(--text-secondary); font-size: 0.8rem;">Ready for upload.</p>`;
             }
         }
 
-        // --- 6. UPLOAD CHAPTER LOGIC (UPLOAD TO STORAGE THEN DB) ---
+        // --- 4. UNIFIED UPLOAD LOGIC ---
         const uploadForm = document.getElementById('uploadForm');
         if(uploadForm) {
             uploadForm.addEventListener('submit', async (e) => {
@@ -240,34 +197,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.disabled = true;
                 statusBox.style.display = 'block';
 
-                const seriesId = document.getElementById('mangaSelect').value;
+                let targetSeriesId = mangaSelect.value;
                 const chapNum = document.getElementById('chapterNum').value;
 
                 try {
-                    const downloadURLs = [];
-                    // Upload each file to Storage concurrently
+                    // IF NEW SERIES, REGISTER IT FIRST
+                    if (targetSeriesId === 'NEW_SERIES') {
+                        statusBox.innerText = "Registering new Manga Series into database...";
+                        const seriesRef = await db.collection("series").add({
+                            title: seriesTitle.value,
+                            coverUrl: seriesCoverUrl.value,
+                            author: document.getElementById('seriesAuthor').value || "Unknown",
+                            createdAt: Date.now()
+                        });
+                        targetSeriesId = seriesRef.id;
+                    }
+
+                    // UPLOAD CHAPTER IMAGES TO FIREBASE STORAGE
                     statusBox.innerText = `Uploading ${selectedFiles.length} pages to Storage Bucket... Please wait.`;
+                    const downloadURLs = [];
                     
                     for(let i=0; i < selectedFiles.length; i++) {
                         const file = selectedFiles[i];
-                        const storageRef = storage.ref(`manga/${seriesId}/chapter_${chapNum}/${file.name}`);
+                        const storageRef = storage.ref(`manga/${targetSeriesId}/chapter_${chapNum}/${file.name}`);
                         const snapshot = await storageRef.put(file);
                         const downloadURL = await snapshot.ref.getDownloadURL();
                         downloadURLs.push(downloadURL);
                         statusBox.innerText = `Uploading pages... ${i+1}/${selectedFiles.length} done.`;
                     }
 
+                    // SAVE CHAPTER RECORD
                     statusBox.innerText = "Saving Chapter record to Database...";
-
-                    // Save the array of URLs to Firestore chapters collection
                     await db.collection("chapters").add({
-                        seriesId: seriesId,
+                        seriesId: targetSeriesId,
                         chapterNum: Number(chapNum),
                         pages: downloadURLs,
                         uploadTime: Date.now()
                     });
 
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Published';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Published Successfully';
                     statusBox.innerText = "Chapter has been successfully pushed and is Live!";
                     
                     setTimeout(() => { window.location.reload(); }, 2000);
@@ -288,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const readerPages = document.getElementById('readerPages');
     if (readerPages && db) {
         const urlParams = new URLSearchParams(window.location.search);
-        const chapId = urlParams.get('chapId'); // We now look for the unique chapter document ID
+        const chapId = urlParams.get('chapId'); 
         
         if (!chapId) {
             document.getElementById('readerTitle').textContent = "Error: Invalid Link";
@@ -304,13 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const chapterData = doc.data();
             
-            // Get Series Title for Header
+            // Get Series Title
             const seriesDoc = await db.collection("series").doc(chapterData.seriesId).get();
             const seriesTitle = seriesDoc.exists ? seriesDoc.data().title : "Unknown Series";
             
             document.getElementById('readerTitle').textContent = `${seriesTitle} - Ch. ${chapterData.chapterNum}`;
             
-            // Render Real Image Array from Storage!
+            // Render Real Image Array from Storage
             readerPages.innerHTML = ''; 
             chapterData.pages.forEach((pageUrl, index) => {
                 const img = document.createElement('img');
